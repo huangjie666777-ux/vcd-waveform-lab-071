@@ -1,13 +1,34 @@
 # VCD Waveform Lab
 
-React and TypeScript application scaffold.
+离线、本地运行的 TypeScript + React + Vite 数字电路 VCD 波形调试页面，不连接硬件或外部服务。
+
+## 支持范围
+
+- 解析 `$timescale`、嵌套 `$scope/$upscope`、`wire` 与 `reg`、标量与向量。
+- 支持同一标识码的多个声明别名；支持 `$dumpvars` 与 `0/1/x/z` 变化。
+- 短向量按标准左侧补零；首次赋值前值为 `x`；同一时刻多次赋值取最后值。
+- 拒绝未知标识码、时间倒退、超过位宽的值、非四态值和不支持的变量类型，错误显示行列位置，解析失败时保留旧数据。
+- 时间戳和游标差值使用 `BigInt`，支持超过 JavaScript 安全整数范围的时间。
+
+## 操作
+
+1. `npm install` 后运行 `npm run dev`，浏览器打开 Vite 输出地址。
+2. 点击“导入 VCD”选择本地文件，或点击“载入示例”查看总线、同标识码别名、x 与 z。
+3. 在左侧层级树浏览或搜索信号，点击“添加”；波形列表可移除、上下调序并在二进制/十六进制间切换。
+4. 鼠标滚轮缩放、拖拽波形平移、“全局适配”查看完整转储；拖动 C1/C2 游标查看各信号值和精确时间差。
+5. 在右侧选择一位时钟，在时钟 0 到 1 边沿采样；为其他信号填写等位宽四态位串，`x/z` 按字面比较。
+6. 命中时间按顺序列出；点击命中可跳转并居中。修改时钟或条件后旧结果立即标记失效；无结果会明确显示“无命中”。
+
+## 性能模型
+
+解析、信号搜索和条件检索在 Web Worker 中执行并回报进度，可取消。连续导入或重新检索使用递增任务号，旧任务结果不会覆盖新任务。事件以稀疏变化点存储，检索使用二分时间索引；波形只读取可见窗口边界、边界左侧延续值及窗口内变化，不逐时间单位展开。
+
+## 开发命令
 
 ```sh
 npm install
-npm run dev
-npm run build
 npm test
+npm run build
+npm run dev
+npm run preview
 ```
-
-Node.js 22.19.0, React 19.0.0, TypeScript 5.8.3, Vite 6.2.0.
-The test runner is available; no application tests or waveform logic are implemented in the scaffold.

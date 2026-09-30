@@ -1,0 +1,58 @@
+$timescale 1 ns $end
+$scope module top $end
+$scope module cpu $end
+$var wire 1 ! clk $end
+$var wire 1 " rst_n $end
+$var wire 4 # data $end
+$var reg 4 $ alias_data $end
+$var wire 1 % ready $end
+$upscope $end
+$scope module dbg $end
+$var wire 1 & probe $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+0!
+0"
+bxxxx #
+bxxxx $
+0%
+x&
+$end
+#5
+1!
+#10
+0!
+1"
+b0101 #
+b0101 $
+1%
+z&
+#15
+1!
+#20
+0!
+b10xz #
+b10xz $
+0%
+x&
+#25
+1!
+#30
+0!
+b1111 #
+b1111 $
+1%
+1&
+#35
+1!
+#40
+0!
+b0000 #
+b0000 $
+0%
+0&
+#45
+1!
