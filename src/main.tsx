@@ -1,3 +1,5 @@
 import { createRoot } from "react-dom/client";
+import { App } from "./ui/App";
+import "./styles.css";
 
-createRoot(document.getElementById("root")!).render(<main><h1>VCD Waveform Lab</h1></main>);
+createRoot(document.getElementById("root")!).render(<App />);

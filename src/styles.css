@@ -1,0 +1,38 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; background: #1e1f24; color: #ddd; font-size: 13px; }
+button { background: #2d2f36; color: #ddd; border: 1px solid #444; border-radius: 4px; padding: 3px 10px; cursor: pointer; }
+button:hover { background: #3a3d46; }
+button:disabled { opacity: 0.5; cursor: default; }
+input, select { background: #26282e; color: #ddd; border: 1px solid #444; border-radius: 4px; padding: 3px 6px; }
+.app { display: flex; flex-direction: column; height: 100vh; }
+.toolbar { display: flex; gap: 8px; align-items: center; padding: 8px 12px; background: #26272c; border-bottom: 1px solid #3a3b41; flex-wrap: wrap; }
+.toolbar .spacer { flex: 1; }
+.status { color: #9acd7a; }
+.error { color: #ff7a7a; }
+.main { display: flex; flex: 1; min-height: 0; }
+.sidebar { width: 260px; border-right: 1px solid #3a3b41; display: flex; flex-direction: column; min-height: 0; }
+.sidebar h3, .signallist h3 { margin: 8px 10px 4px; font-size: 12px; color: #999; text-transform: uppercase; }
+.tree { overflow: auto; flex: 1; padding: 4px 6px; }
+.tree .scope { margin-left: 12px; }
+.tree .scopename { color: #7ab8ff; cursor: default; padding: 1px 0; }
+.tree .var { display: flex; gap: 6px; align-items: center; padding: 1px 0 1px 12px; white-space: nowrap; }
+.tree .var .meta { color: #888; }
+.center { flex: 1; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.wavewrap { flex: 1; display: flex; min-height: 0; }
+.signallist { width: 240px; border-right: 1px solid #3a3b41; overflow-y: auto; }
+.sigrow { display: flex; align-items: center; gap: 4px; padding: 0 6px; height: 34px; border-bottom: 1px solid #2a2b30; }
+.sigrow .name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sigrow .meta { color: #888; font-size: 11px; }
+.canvascol { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.wavecanvas { flex: 1; min-height: 0; cursor: crosshair; }
+.cursorpanel { padding: 6px 12px; border-top: 1px solid #3a3b41; background: #26272c; max-height: 160px; overflow: auto; }
+.cursorpanel table { border-collapse: collapse; }
+.cursorpanel td, .cursorpanel th { padding: 1px 10px; font-family: Consolas, monospace; font-size: 12px; }
+.searchpanel { border-top: 1px solid #3a3b41; padding: 8px 12px; background: #24252a; max-height: 220px; overflow: auto; }
+.searchpanel .row { display: flex; gap: 6px; align-items: center; margin: 3px 0; flex-wrap: wrap; }
+.hits { margin-top: 6px; }
+.hits button { margin: 0 4px 4px 0; font-family: Consolas, monospace; }
+.progress { display: inline-block; width: 160px; height: 8px; background: #333; border-radius: 4px; overflow: hidden; vertical-align: middle; }
+.progress > div { height: 100%; background: #5aa3e8; }
+.stale { color: #e8c35a; }
+.hint { color: #888; }

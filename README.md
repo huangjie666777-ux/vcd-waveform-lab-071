@@ -1,13 +1,45 @@
 # VCD Waveform Lab
 
-React and TypeScript application scaffold.
+离线数字电路波形调试网页。所有解析、检索均在本地浏览器（Web Worker）中完成，不连接硬件或外部服务。
+
+## 运行
 
 ```sh
 npm install
-npm run dev
-npm run build
-npm test
+npm run dev      # 开发服务器
+npm test         # vitest 单元测试
+npm run build    # tsc 类型检查 + 生产构建
+npm run preview  # 预览构建产物
 ```
 
-Node.js 22.19.0, React 19.0.0, TypeScript 5.8.3, Vite 6.2.0.
-The test runner is available; no application tests or waveform logic are implemented in the scaffold.
+Node.js 22、React 19、TypeScript 5.8、Vite 6。
+
+## 支持范围
+
+- **VCD 解析**（`src/vcd/parser.ts`）
+  - `$timescale`（1/10/100 + s/ms/us/ns/ps/fs）、嵌套 `$scope`/`$upscope`
+  - `wire`/`reg` 标量与向量（`[msb:lsb]`），同一标识码的多个变量互为别名、共享变化
+  - `$dumpvars` 初始值；标量 `0/1/x/z` 与向量 `b…` 变化
+  - 短向量按标准左补齐（MSB 为 x/z 时用 x/z 补，否则补 0）
+  - 错误定位到行号并中止解析：未知标识码、时间倒退、值位宽超过变量位宽、不支持的变量类型（仅支持 wire/reg）；解析失败时页面保留上一份数据
+  - 时间戳使用 BigInt，支持超过 2^53 的时间；同一时刻多次赋值取最后值；首次赋值前值为 x
+- **时间索引**（`src/vcd/valueIndex.ts`）：事件稀疏存储，二分定位，区间查询包含左侧延续值，不按时间单位展开
+- **条件检索**（`src/vcd/search.ts`）：在一位时钟的 0→1 边沿采样，多个等值条件以同刻全部更新后的值联合匹配；条件为与信号等位宽的四态位串，x/z 按字面比较
+- **波形渲染**（`src/ui/WaveCanvas.tsx`）：Canvas 只绘制可见时间段；电平线区分 0/1/x/z，总线绘制梯形与数值（二进制/十六进制可切换）；横向缩放、拖拽平移、全局适配、双游标（A/B）与各信号游标值、精确时间差
+- **Worker**（`src/worker/`）：解析与检索在 Worker 中执行，带进度上报与取消；每次任务分配递增 id，旧任务结果不会覆盖新任务
+
+## 操作说明
+
+1. 点击「选择文件」导入 VCD，或点击「加载示例」（含总线、别名 `top.data`/`top.data_alias`、x/z 未知态及超过安全整数的时间戳）。
+2. 左侧层级树可搜索信号名，点「+」加入波形区；波形区左侧列表可移除、上下调序、切换 bin/hex。
+3. 波形区：滚轮缩放（以鼠标为锚点）、左键拖拽平移、点击放置游标 A、Shift+点击放置游标 B；底部表格显示各信号在两个游标处的值及 |B−A| 精确时间差。
+4. 底部「条件检索」：选择时钟信号，添加若干 `信号 = 位串` 条件（位串须与信号等位宽，可含 x/z），点击「开始检索」；命中按时间列出，点击命中项跳转并居中波形。无命中会明确显示；修改条件后旧结果标记为失效。
+
+## 目录结构
+
+```
+src/vcd/      解析、时间索引、检索、格式化（纯逻辑，含 vitest 测试）
+src/worker/   Worker 任务协议与主线程客户端（任务 id 防旧任务覆盖）
+src/ui/       React 组件：层级树、波形画布、检索面板、App
+src/sample.ts 内置示例 VCD
+```
